@@ -3,6 +3,7 @@
 #include "Logger/logger_log4cpp.h"
 #include "Logger/logger_log4cxx.h"
 #include "Logger/logger_log4cplus.h"
+#include <iostream>
 
 using namespace LOGTEST;
 
@@ -16,56 +17,33 @@ int main()
 
     // init tester
     Tester tester;
-    int delay = 2;
-    int total_logs = 10e6; // ten million logs
-    int threads, logs_per_threads;
 
-    // scenario 1
-    std::cout << "Scenario 1:" << std::endl;
-    threads = 1;
-    logs_per_threads = total_logs / threads;
-    tester.print_header();
-    tester.test_single_thread(spdlog, logs_per_threads);
-    sleep(delay);   // halt to avoid interference
-    tester.test_single_thread(log4cpp, logs_per_threads);
-    sleep(delay);
-    tester.test_single_thread(log4cxx, logs_per_threads);
-    sleep(delay);
-    tester.test_single_thread(log4cplus, logs_per_threads);
-    sleep(delay);
-    std::cout << std::endl;
+    // 1. performance
+    int total_logs = 1e6;
+	std::cout << "Running performance test..." << std::endl;
+	int test_cases[5] = { 1, 10, 20, 50, 100 };
+	for (int i = 0; i < sizeof(test_cases) / sizeof(test_cases[0]); ++i)
+	{
+		int threads = test_cases[i];
+		int logs_per_threads = total_logs / threads;
+		
+		// print test information
+		std::cout << "Scenario " << i + 1 << ":" << std::endl;
+		tester.print_header();
+		
+		// add loggers here
+		tester.run_performance_test(spdlog, threads, logs_per_threads);
+        tester.run_performance_test(log4cpp, threads, logs_per_threads);
+        tester.run_performance_test(log4cxx, threads, logs_per_threads);
+        tester.run_performance_test(log4cplus, threads, logs_per_threads);
+        
+		Sleep(2); // halt to avoid interference
+		std::cout << std::endl;
+	}
 
-    // scenario 2
-    std::cout << "Scenario 2:" << std::endl;
-    threads = 5;
-    logs_per_threads = total_logs / threads;
-    tester.print_header();
-    tester.test_multi_thread(spdlog, threads, logs_per_threads);
-    sleep(delay);
-    tester.test_multi_thread(log4cpp, threads, logs_per_threads);
-    sleep(delay);
-    tester.test_multi_thread(log4cxx, threads, logs_per_threads);
-    sleep(delay);
-    tester.test_multi_thread(log4cplus, threads, logs_per_threads);
-    sleep(delay);
-    std::cout << std::endl;
-
-    // scenario 3
-    std::cout << "Scenario 3:" << std::endl;
-    threads = 10;
-    logs_per_threads = total_logs / threads;
-    tester.print_header();
-    tester.test_multi_thread(spdlog, threads, logs_per_threads);
-    sleep(delay);
-    tester.test_multi_thread(log4cpp, threads, logs_per_threads);
-    sleep(delay);
-    tester.test_multi_thread(log4cxx, threads, logs_per_threads);
-    sleep(delay);
-    tester.test_multi_thread(log4cplus, threads, logs_per_threads);
-    sleep(delay);
-    std::cout << std::endl;
-
-    // scenario ...
+	// 2. thread safety
+	std::cout << "Runing thread safety test..." << std::endl;
+	tester.run_thread_safety_test(spdlog);
 
     return 0;
 }
