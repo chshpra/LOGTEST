@@ -11,8 +11,8 @@ namespace LOGTEST
 		Logger() { };
 		virtual ~Logger() { };
 		
-		virtual void log(const string &msg) = 0;		// implement the fastest logging method
-		virtual void log_mt(const string &msg) = 0;		// implement the fastest thread-safe logging method
-		virtual string get_libname() = 0;					// return the logger's library name
+		virtual void log(const string &msg) = 0;
+		virtual void flush() = 0;
+		virtual string get_libname() = 0;				// return the logger's library name
 	};
 }
