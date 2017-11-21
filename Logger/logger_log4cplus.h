@@ -18,12 +18,13 @@ namespace LOGTEST
     public:
         static Logger_log4cplus& instance();
 
-        void log(const string &msg);
-        void log_mt(const string &msg);
-        string get_libname();
+        void log(const string &msg) override ;
+        void flush() override ;
+        string get_libname() override ;
 
     private:
         Logger_log4cplus();
+
         log4cplus::Logger logger;
     };
 }

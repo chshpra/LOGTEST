@@ -19,10 +19,9 @@ namespace LOGTEST
 		LOG4CXX_INFO(logger, msg);
 	}
 
-	void Logger_log4cxx::log_mt(const string &msg)
-	{
-		LOG4CXX_INFO(logger, msg);
-	}
+	void Logger_log4cxx::flush()
+    {
+    }
 
 	string Logger_log4cxx::get_libname()
 	{

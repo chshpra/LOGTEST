@@ -3,7 +3,6 @@
 #include "Logger/logger_log4cpp.h"
 #include "Logger/logger_log4cxx.h"
 #include "Logger/logger_log4cplus.h"
-#include <iostream>
 
 using namespace LOGTEST;
 
@@ -37,17 +36,16 @@ int main()
         tester.run_performance_test(log4cxx, threads, logs_per_threads);
         tester.run_performance_test(log4cplus, threads, logs_per_threads);
         
-		Sleep(2); // halt to avoid interference
+		sleep(2); // halt to avoid interference
 		std::cout << std::endl;
 	}
 
 	// 2. thread safety
-	std::cout << "Runing thread safety test..." << std::endl;
+	std::cout << "Running thread safety test..." << std::endl;
 	tester.run_thread_safety_test(spdlog);
 	tester.run_thread_safety_test(log4cpp);
 	tester.run_thread_safety_test(log4cxx);
 	tester.run_thread_safety_test(log4cplus);
-	
 
     return 0;
 }

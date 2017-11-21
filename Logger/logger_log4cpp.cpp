@@ -7,8 +7,8 @@ namespace LOGTEST
 		log4cpp::Appender *appender = new log4cpp::FileAppender("default", "./logs/log4cpp.txt");
 		appender->setLayout(new log4cpp::BasicLayout());
 		logger = &log4cpp::Category::getRoot();
-		logger->setPriority(log4cpp::Priority::INFO);
-		logger->addAppender(appender);
+        logger->addAppender(appender);
+        logger->setPriority(log4cpp::Priority::INFO);
 	}
 
 	Logger_log4cpp& Logger_log4cpp::instance() 
@@ -22,10 +22,9 @@ namespace LOGTEST
 		logger->info(msg);
 	}
 
-	void Logger_log4cpp::log_mt(const string &msg) 
-	{
-		logger->info(msg);
-	}
+	void Logger_log4cpp::flush()
+    {
+    }
 
 	string Logger_log4cpp::get_libname()
 	{

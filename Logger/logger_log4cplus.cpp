@@ -24,9 +24,9 @@ namespace LOGTEST
         LOG4CPLUS_INFO(logger, msg);
     }
 
-    void  Logger_log4cplus::log_mt(const string &msg)
+    void Logger_log4cplus::flush()
     {
-        LOG4CPLUS_INFO(logger, msg);
+        // todo
     }
 
     string Logger_log4cplus::get_libname()
