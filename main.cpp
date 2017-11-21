@@ -44,6 +44,10 @@ int main()
 	// 2. thread safety
 	std::cout << "Runing thread safety test..." << std::endl;
 	tester.run_thread_safety_test(spdlog);
+	tester.run_thread_safety_test(log4cpp);
+	tester.run_thread_safety_test(log4cxx);
+	tester.run_thread_safety_test(log4cplus);
+	
 
     return 0;
 }
