@@ -1,6 +1,6 @@
 #pragma once
 #include "logger.h"
-#include "spdlog/spdlog.h"
+#include "spdlog\spdlog.h"
 #include <memory>
 
 namespace LOGTEST
@@ -11,12 +11,11 @@ namespace LOGTEST
 		static Logger_spdlog& instance();
 
 		void log(const string &msg);
-		void log_mt(const string &msg);
+		void flush();
 		string get_libname();
 
 	private:
 		Logger_spdlog();
-		std::shared_ptr<spdlog::logger> spdlogger_mt;
-		std::shared_ptr<spdlog::logger> spdlogger_st;
+		std::shared_ptr<spdlog::logger> logger;
 	};
 }
