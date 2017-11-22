@@ -10,7 +10,8 @@ namespace LOGTEST
 	
 	Logger_spdlog::Logger_spdlog() 
 	{
-		spdlog::set_async_mode(pow(2, 20)); // the argument must be a power of 2
+		int queue_size = pow(2, 20);	// queue size must be a power of two
+		spdlog::set_async_mode(queue_size); 
 		logger = spdlog::basic_logger_mt("logger", "spdlog.txt", true);
 	}
 
