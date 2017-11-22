@@ -5,6 +5,11 @@
 #include <cstdlib>
 #include <regex>
 #include <thread>
+#include <chrono>
+
+typedef std::chrono::duration<uint64_t, std::ratio<1, 1>> second;
+typedef std::chrono::duration<uint64_t, std::ratio<1, 1000>> millisecond;
+typedef std::chrono::duration<uint64_t, std::ratio<1, 1000000>> microsecond;
 
 namespace LOGTEST
 {
@@ -26,26 +31,24 @@ namespace LOGTEST
 
     void Tester::run_performance_test(Logger &logger, const int &num_threads, const int &logs_per_thread)
     {
-        // test performance
-		std::vector<bool> thread_states(num_threads, false);
-        clock_t start = clock();
+	std::vector<bool> thread_states(num_threads, false);
+        auto start_time = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < num_threads; ++i)
         {
             std::thread new_thread(thread_func, &logger, i, logs_per_thread, &thread_states);
             new_thread.detach();
         }
+		// check if all threads are finished
 		auto iter = thread_states.begin();
-		// check if all finished
 		while (iter != thread_states.end())
 		{
-			if (*iter == true)
-					++iter;
+			if (*iter == true) ++iter;
+			Sleep(1);	// todo: changed to linux version
 		}
-        clock_t end = clock();
-        double duration = (double)(end - start) / CLOCKS_PER_SEC;
+        auto end_time = std::chrono::high_resolution_clock::now();
+	    uint64_t duration_us = std::chrono::duration_cast<microsecond>(end_time - start_time).count();
 
-        // print result
-        print_result(logger.get_libname(), num_threads, logs_per_thread, duration);
+        print_result(logger.get_libname(), num_threads, logs_per_thread, duration_us);
     }
 
 	bool Tester::run_thread_safety_test(Logger &logger)
@@ -91,15 +94,15 @@ namespace LOGTEST
                   << std::endl;
     }
 
-    void Tester::print_result(const string &lib_name, const int &num_threads, const int &logs_per_thread, const double &secs)
+    void Tester::print_result(const string &lib_name, const int &num_threads, const int &logs_per_thread, const double &duration_us)
     {
         std::cout << std::setw(10) << std::left << lib_name
                   << std::setw(10) << std::left << num_threads
                   << std::setw(15) << std::left << logs_per_thread
                   << std::setw(15) << std::left << num_threads * logs_per_thread
-                  << std::setw(15) << std::left << std::setprecision(5) << secs
-                  << std::setw(15) << std::left << std::setprecision(5) << (num_threads * logs_per_thread) / secs
-                  << std::setw(15) << std::left << std::setprecision(5) << secs / (num_threads * logs_per_thread) * 10e8
+                  << std::setw(15) << std::left << std::setprecision(5) << duration_us / 1E6
+                  << std::setw(15) << std::left << std::setprecision(5) << (num_threads * logs_per_thread) / (duration_us / 1E6)
+                  << std::setw(15) << std::left << std::setprecision(5) << duration_us * 1E3 / (num_threads * logs_per_thread)
                   << std::endl;
     }
 }
