@@ -22,6 +22,8 @@ namespace LOGTEST
 
     private:
         Logger_g3log();
+        std::unique_ptr<g3::LogWorker> worker;
+        std::unique_ptr<g3::FileSinkHandle> defaultHandle;
     };
 }
 

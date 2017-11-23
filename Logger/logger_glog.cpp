@@ -8,7 +8,7 @@ namespace LOGTEST
 {
     Logger_glog::Logger_glog()
     {
-        FLAGS_log_dir = "./logs/glog.txt";
+        FLAGS_log_dir = "./logs/";
         google::InitGoogleLogging("log_test");
         FLAGS_alsologtostderr = false;
     }

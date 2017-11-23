@@ -16,6 +16,7 @@ namespace LOGTEST
 
 	private:
 		Logger_spdlog();
-		std::shared_ptr<spdlog::logger> logger;
-	};
+		//std::shared_ptr<spdlog::logger> logger;
+        std::shared_ptr<spdlog::async_logger> logger;
+    };
 }

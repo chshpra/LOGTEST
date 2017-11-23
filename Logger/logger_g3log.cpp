@@ -8,8 +8,8 @@ namespace LOGTEST
 {
     Logger_g3log::Logger_g3log()
     {
-        auto worker = g3::LogWorker::createLogWorker();
-        auto defaultHandler = worker->addDefaultLogger("g3log", "./logs/");
+        worker = g3::LogWorker::createLogWorker();
+        defaultHandle = worker->addDefaultLogger("g3log", "./logs/");
         g3::initializeLogging(worker.get());
     }
 
