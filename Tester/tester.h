@@ -20,7 +20,7 @@ namespace LOGTEST
         void print_result_overall(const string &lib_name, const int &num_threads, const int &logs_per_thread,
                                   const uint64_t &duration_ns);
         void print_result_latency(const string &lib_name, const int &num_threads, const int &logs_per_thread,
-                                  const uint64_t &min_ns, const uint64_t &mean_ns, const uint64_t &max_ns);
+                                  const uint64_t &min_ns, const uint64_t &mean_ns, const uint64_t &max_ns, const uint64_t &sigma);
         void save_cost_to_file(const string &libname, const int &num_threads, std::vector<uint64_t> *cost_vector);
     };
 }

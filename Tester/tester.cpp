@@ -2,12 +2,10 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include <cstdlib>
 #include <regex>
 #include <thread>
-#include <chrono>
-#include <algorithm>
 #include <numeric>
+#include <cmath>
 #include <mutex>
 #include <unistd.h>
 #include <fstream>
@@ -105,6 +103,18 @@ namespace LOGTEST
         }
     }
 
+    uint64_t std_deviation(std::vector<uint64_t> &samples, const uint64_t &mean)
+    {
+        uint64_t sum = 0;
+
+        for (auto iter = samples.cbegin(); iter != samples.cend(); ++iter)
+        {
+            sum += (*iter - mean) * (*iter - mean);
+        }
+
+        return std::sqrt(sum / (samples.size() - 1));
+    }
+
     void Tester::run_latency_test(Logger &logger, const int &num_threads, const int &logs_per_thread)
     {
         // flush previous logs to avoid interference
@@ -116,8 +126,10 @@ namespace LOGTEST
         uint64_t min_cost_us = *std::min_element(cost_vector.cbegin(), cost_vector.cend());
         uint64_t mean_cost_us = std::accumulate(cost_vector.cbegin(), cost_vector.cend(), (uint64_t)0) / cost_vector.size();
         uint64_t max_cost_us = *std::max_element(cost_vector.cbegin(), cost_vector.cend());
+        uint64_t sigma_cost = std_deviation(cost_vector, mean_cost_us);
+        print_result_latency(logger.get_libname(), num_threads, logs_per_thread, min_cost_us, mean_cost_us, max_cost_us, sigma_cost);
 
-        print_result_latency(logger.get_libname(), num_threads, logs_per_thread, min_cost_us, mean_cost_us, max_cost_us);
+        // save for further analysis
         // save_cost_to_file(logger.get_libname(), num_threads, &cost_vector);
     }
 
@@ -128,7 +140,7 @@ namespace LOGTEST
         std::ofstream fs(file_name, std::ios::trunc);
         for (auto element : *cost_vector)
         {
-            fs << element << ",";
+            fs << element << std::endl;
         }
         fs.close();
     }
@@ -203,11 +215,12 @@ namespace LOGTEST
                   << std::setw(15) << std::left << "min ns/log"
                   << std::setw(15) << std::left << "avg. ns/log"
                   << std::setw(15) << std::left << "max ns/log"
+                  << std::setw(15) << std::left << "std. deviation"
                   << std::endl;
     }
 
     void Tester::print_result_latency(const string &lib_name, const int &num_threads, const int &logs_per_thread,
-                                      const uint64_t &min_ns, const uint64_t &mean_ns, const uint64_t &max_ns)
+                                      const uint64_t &min_ns, const uint64_t &mean_ns, const uint64_t &max_ns, const uint64_t &sigma)
     {
         std::cout << std::setw(10) << std::left << lib_name
                   << std::setw(10) << std::left << num_threads
@@ -216,6 +229,7 @@ namespace LOGTEST
                   << std::setw(15) << std::left << min_ns
                   << std::setw(15) << std::left << mean_ns
                   << std::setw(15) << std::left << max_ns
+                  << std::setw(15) << std::left << sigma
                   << std::endl;
     }
 }

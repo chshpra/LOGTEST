@@ -17,14 +17,15 @@ int main()
     Logger_log4cxx &log4cxx = Logger_log4cxx::instance();
     Logger_glog &glog = Logger_glog::instance();
     Logger_g3log &g3log = Logger_g3log::instance();
+    Logger_log4cplus &log4cplus = Logger_log4cplus::instance();
 
     // init tester
     std::cout << "initiating tester..." << std::endl << std::endl;
     Tester tester;
 
     // 1. performance
-    int total_logs = 1e6;
-    uint64_t delay= 1;
+    int total_logs = 1E6;
+    useconds_t delay= 1;
 	std::cout << "1. Running overall performance test..." << std::endl;
 	int test_cases[4] = { 1, 10, 20, 100 };
 	for (int i = 0; i < sizeof(test_cases) / sizeof(test_cases[0]); ++i)
@@ -39,6 +40,8 @@ int main()
 		// add loggers here
         tester.run_overall_performance_test(spdlog, threads, logs_per_threads);
         usleep(delay);
+        tester.run_overall_performance_test(log4cplus, threads, logs_per_threads);
+        usleep(delay);
         tester.run_overall_performance_test(log4cpp, threads, logs_per_threads);
         usleep(delay);
         tester.run_overall_performance_test(log4cxx, threads, logs_per_threads);
@@ -47,7 +50,6 @@ int main()
         usleep(delay);
         tester.run_overall_performance_test(g3log, threads, logs_per_threads);
         usleep(delay);
-        // tester.run_overall_performance_test(log4cplus, threads, logs_per_threads);
 
         std::cout << std::endl;
     }
@@ -66,6 +68,8 @@ int main()
         // add loggers here
         tester.run_latency_test(spdlog, threads, logs_per_threads);
         usleep(delay);
+        tester.run_latency_test(log4cplus, threads, logs_per_threads);
+        usleep(delay);
         tester.run_latency_test(log4cpp, threads, logs_per_threads);
         usleep(delay);
         tester.run_latency_test(log4cxx, threads, logs_per_threads);
@@ -79,12 +83,12 @@ int main()
     }
 
 	// 3. thread safety
-	std::cout << "3. Running thread safety test..." << std::endl;
-	tester.run_thread_safety_test(spdlog);
-	tester.run_thread_safety_test(log4cpp);
-	tester.run_thread_safety_test(log4cxx);
-    tester.run_thread_safety_test(glog);
-    tester.run_thread_safety_test(g3log);
+//	std::cout << "3. Running thread safety test..." << std::endl;
+//	tester.run_thread_safety_test(spdlog);
+//	tester.run_thread_safety_test(log4cpp);
+//	tester.run_thread_safety_test(log4cxx);
+//  tester.run_thread_safety_test(glog);
+//  tester.run_thread_safety_test(g3log);
 
     return 0;
 }

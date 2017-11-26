@@ -3,14 +3,12 @@
 //
 
 #include "logger_log4cplus.h"
-#include <iostream>
 
 namespace LOGTEST
 {
-    Logger_log4cplus::Logger_log4cplus()
+    Logger_log4cplus::Logger_log4cplus() :
+            pFileAppender(new log4cplus::FileAppender("./logs/log4cplus.txt"))
     {
-        log4cplus::SharedAppenderPtr pFileAppender(new log4cplus::FileAppender("./logs/log4cplus.txt"));
-        std::cout << "fine til here" << std::endl;
         pFileAppender->setName("log4cplus_file_appender");
         logger = log4cplus::Logger::getInstance("log4cplus");
         logger.addAppender(pFileAppender);

@@ -25,6 +25,7 @@ namespace LOGTEST
     private:
         Logger_log4cplus();
 
+        log4cplus::SharedAppenderPtr pFileAppender;
         log4cplus::Logger logger;
     };
 }
